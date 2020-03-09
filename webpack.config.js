@@ -16,7 +16,7 @@ const mode = process.env.NODE_ENV
 const isDev = mode === 'development' ? true : false
 const PUBLIC_PATH = '/'
 const PORT = 5503
-const BASE_PATH = 'react-manage'
+const BASE_PATH = ''
 
 const devServer = {
   contentBase: path.join(__dirname, 'build'),// 根目录
@@ -29,7 +29,7 @@ const devServer = {
   writeToDisk: true, // 开发环境是否写入文件 output 配置的目录
   historyApiFallback: {
     rewrites: [
-      { from: /^\/react-manage/, to: '/react.html' },// 开发环境下防止404
+      { from: /^\//, to: '/index.html' },// 开发环境下防止404
     ]
   },
   quiet: true, // 静默输出
@@ -40,12 +40,12 @@ const plugins = [// webpack 插件
   new AutoGen(),// 自动生成所需index.js
   new webpack.DefinePlugin({ '_MODE_': JSON.stringify(mode) }),
   // 拷贝文件
-  new CopyPlugin([
-    { from: 'angular', to: '' },
-  ]),
+  // new CopyPlugin([
+  //   { from: 'angular', to: '' },
+  // ]),
   // 生成带打包js的html
   new HtmlWebpackPlugin({
-    filename: 'react.html',
+    filename: 'index.html',
     template: './public/index.html',
   }),
   new CleanWebpackPlugin(),// 清理打包的文件
