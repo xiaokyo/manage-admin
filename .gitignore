@@ -1,0 +1,14 @@
+build
+dist
+.idea
+.DS_Store/
+.svn
+.history/
+.vscode/settings.json
+static/components/paging/paging.js
+static/components/paging/paging.html
+node_modules
+package-lock.json
+env.js
+
+src/.cache
