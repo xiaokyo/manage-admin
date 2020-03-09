@@ -176,6 +176,6 @@ module.exports = {
     ]
   },
   devServer,// 开发配置
-  devtool: isDev ? 'source-map' : 'none',
+  devtool: isDev ? 'inline-source-map' : 'none',
   plugins,// 插件配置
 }

@@ -2,11 +2,10 @@
 ![npm](https://img.shields.io/badge/npm-v6.9.0-green)
 ![node](https://img.shields.io/badge/node-v10.16.3-red)
 ![antd](https://img.shields.io/badge/antd-^4.0.1-orange)
-![angluar](https://img.shields.io/badge/angluar-v1.x-gray)
 ![react](https://img.shields.io/badge/react-^16.13.0-blue)
 ![wepback](https://img.shields.io/badge/webpack-^4.42.0-green)
 
-# CJ ERP(angular1.x 和 react并存版本)
+# mange-admin(管理后台框架)
 
 ## 目录结构
 ```xml
