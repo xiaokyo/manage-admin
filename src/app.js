@@ -2,17 +2,12 @@ import React from 'react'
 import { Layout } from 'antd'
 import { Switch, Route } from "react-router-dom"
 
-import { getUserInfo, isLogin } from 'utils'
-
 // components
 import Menu from 'components/menus'
 // routers
 import routers from 'routers'
 // style
 import './app.less'
-
-const userInfo = getUserInfo()
-isLogin()
 
 const { Content, Sider } = Layout
 
@@ -22,8 +17,8 @@ export default props => {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider id="components-layout-demo-side">
         <div className="logo">
-          <img src="/static/image/public-img/erplogo.png" />
-          <span>{userInfo?.erploginName ?? '未知'}</span>
+          <img src="https://xiaok.club/ca662117.png" />
+          {/* <span>xiaokyo</span> */}
         </div>
         <Menu />
       </Sider>

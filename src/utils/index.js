@@ -17,6 +17,16 @@ export const getStorage = key => {
 }
 
 /**
+ * 保存到storage
+ * @param {string} key key
+ * @param {string} value value
+ */
+export const setStorage = (key, value) => {
+  const _value = Base64.encode(value)
+  window.localStorage.setItem(key, _value)
+}
+
+/**
  * 获取localStorage中的登录用户信息
  */
 export const getUserInfo = () => {
@@ -26,14 +36,6 @@ export const getUserInfo = () => {
     erptoken: getStorage('erptoken'),
     job: getStorage('job'),
   }
-}
-
-/**
- * 获取缓存中的导航
- */
-export const getMenuTree = () => {
-  const nav = window.localStorage.getItem('nav') ?? '[]'
-  return JSON.parse(nav)
 }
 
 /**
