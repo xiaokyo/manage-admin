@@ -13,8 +13,8 @@ const { Search } = Input
 const { Option } = Select
 
 const QUERY_ORDERS = gql`
-  query Orders($orderId:String,$status:Int,$limit:Int,$skip:Int){
-    orders(orderId:$orderId,status:$status,limit:$limit,skip:$skip){
+  query Orders($orderId:String,$status:Int,$payFor:Int,$limit:Int,$skip:Int){
+    orders(orderId:$orderId,payFor:$payFor,status:$status,limit:$limit,skip:$skip){
       _id
       orderId
       user{
@@ -50,9 +50,15 @@ const openNotificationWithIcon = ({ type = 'success', title = 'tips', content = 
   });
 }
 
+const payObj = {// 支付类型
+  0: 'bank',
+  1: 'alipay',
+  2: 'wepay'
+}
+
 export default props => {
 
-  const [params, setParams] = useState({ orderId: '', status: 0, limit: 100, skip: 0 })
+  const [params, setParams] = useState({ orderId: '', status: 0, payFor: 0, limit: 100, skip: 0 })
   const { loading, error, data, refetch } = useQuery(QUERY_ORDERS, {
     variables: { ...params }
   })
@@ -84,6 +90,21 @@ export default props => {
     refetch()
   }
 
+  const dynamicColumns = [// field of bank
+    {
+      title: 'payBank',
+      dataIndex: 'payBank'
+    },
+    {
+      title: 'payAmount',
+      dataIndex: 'payAmount'
+    },
+    {
+      title: 'payRealName',
+      dataIndex: 'payRealName'
+    },
+  ]
+
   const columns = [
     {
       title: 'orderId',
@@ -97,27 +118,9 @@ export default props => {
     {
       title: 'payFor',
       dataIndex: 'payFor',
-      render: val => {
-        const obj = {
-          0: 'bank',
-          1: 'alipay',
-          2: 'wepay'
-        }
-        return obj[val]
-      }
+      render: val => payObj[val]
     },
-    {
-      title: 'payBank',
-      dataIndex: 'payBank'
-    },
-    {
-      title: 'payAmount',
-      dataIndex: 'payAmount'
-    },
-    {
-      title: 'payRealName',
-      dataIndex: 'payRealName'
-    },
+    ...params.payFor == 0 ? dynamicColumns : [],
     {
       title: 'status',
       dataIndex: 'status',
@@ -151,7 +154,7 @@ export default props => {
         const RejectBtn = () => <Button type="danger" size='small' onClick={() => openConfrimUpdate(records, -1)}>reject</Button>
         let res = '--'
         if (records.status === 0) res = <><PassBtn /><RejectBtn /></>
-        return res
+        return <><PassBtn /><RejectBtn /></>
       }
     }
   ]
@@ -164,6 +167,12 @@ export default props => {
           <Option value={0}>Pedding</Option>
           <Option value={1}>Pass</Option>
           <Option value={-1}>Fail</Option>
+        </Select>
+        <Select defaultValue={0} style={{ width: 120, marginRight: 15 }} onChange={val => refresh('payFor', val)}>
+          {/* 0 银行转账  1 支付宝  2 微信 */}
+          <Option value={0}>bank</Option>
+          <Option value={1}>alipay</Option>
+          <Option value={2}>wepay</Option>
         </Select>
         <Search placeholder="search orderId" style={{ maxWidth: 200 }} onSearch={val => refresh('orderId', val)} enterButton />
       </div>

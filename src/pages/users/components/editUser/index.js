@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Modal, Button, notification, Form, Input, Radio } from 'antd'
+import { Modal, Button, notification, Form, Input, Radio, InputNumber } from 'antd'
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks'
 
 
 const UPDATE_USER = gql`
-  mutation UpdateUser($_id:String,$username:String,$sex:String,$phone:String,$avatar:String,$realName:String,$isAdmin:Boolean){
-    updateUser(_id:$_id,username:$username,sex:$sex,phone:$phone,avatar:$avatar,realName:$realName,isAdmin:$isAdmin){
+  mutation UpdateUser($_id:String,$username:String,$sex:String,$phone:String,$email:String,$money:String,$avatar:String,$realName:String,$isAdmin:Boolean){
+    updateUser(_id:$_id,username:$username,sex:$sex,phone:$phone,email:$email,money:$money,avatar:$avatar,realName:$realName,isAdmin:$isAdmin){
       success
       msg
     }
@@ -68,6 +68,7 @@ export default ({ item, refetch, ...otherProps }) => {
         visible={visible}
         footer={null}
         onCancel={() => setVisible(false)}
+        destroyOnClose
       >
         <Form
           labelCol={{ span: 6 }}
@@ -81,7 +82,7 @@ export default ({ item, refetch, ...otherProps }) => {
           <Form.Item label="username" name="username" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="money" name="money" rules={[{ required: true }]}>
+          <Form.Item label="money" name="money">
             <Input />
           </Form.Item>
           <Form.Item label="email" name="email" rules={[{ required: true }]}>
@@ -93,14 +94,14 @@ export default ({ item, refetch, ...otherProps }) => {
           <Form.Item label="realName" name="realName" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="sex" name="sex">
+          <Form.Item label="sex" name="sex" rules={[{ required: true }]}>
             <Radio.Group>
               <Radio.Button value='0'>alien</Radio.Button>
               <Radio.Button value='1'>GG</Radio.Button>
               <Radio.Button value='2'>MM</Radio.Button>
             </Radio.Group>
           </Form.Item>
-          <Form.Item label="isAdmin" name="isAdmin">
+          <Form.Item label="isAdmin" name="isAdmin" rules={[{ required: true }]}>
             <Radio.Group>
               <Radio.Button value={true}>Yes</Radio.Button>
               <Radio.Button value={false}>No</Radio.Button>
