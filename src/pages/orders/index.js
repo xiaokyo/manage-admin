@@ -68,7 +68,7 @@ export default props => {
     const res = await updateOrder({ variables: { orderId, status } })
     const { updateOrder: result } = res.data
     refetch()
-    if (!result?.success) return openNotificationWithIcon({ type: 'error', content: result?.msg || 'server error' })
+    if (!result ?.success) return openNotificationWithIcon({ type: 'error', content: result ?.msg || 'server error' })
     openNotificationWithIcon({ content: 'successful' })
   }
   const openConfrimUpdate = (item, status) => {// 打开确认弹窗
@@ -113,7 +113,7 @@ export default props => {
     {
       title: 'userName',
       dataIndex: 'user',
-      render: user => user.username
+      render: user => user?.username || ''
     },
     {
       title: 'payFor',
@@ -154,7 +154,7 @@ export default props => {
         const RejectBtn = () => <Button type="danger" size='small' onClick={() => openConfrimUpdate(records, -1)}>reject</Button>
         let res = '--'
         if (records.status === 0) res = <><PassBtn /><RejectBtn /></>
-        return <><PassBtn /><RejectBtn /></>
+        return res
       }
     }
   ]
@@ -181,7 +181,7 @@ export default props => {
         columns={columns}
         rowKey={record => record._id}
         loading={loading}
-        dataSource={data?.orders ?? []}
+        dataSource={data ?.orders ?? []}
         onChange={handleTableChange}
       />
     </>
