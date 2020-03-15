@@ -4,6 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
 import moment from 'moment'
+import { To } from 'utils'
 
 // style
 import './style.less'
@@ -58,17 +59,20 @@ const payObj = {// 支付类型
 
 export default props => {
 
-  const [params, setParams] = useState({ orderId: '', status: 0, payFor: 0, limit: 100, skip: 0 })
+  const [params, setParams] = useState({ orderId: '', limit: 100, skip: 0 })
   const { loading, error, data, refetch } = useQuery(QUERY_ORDERS, {
     variables: { ...params }
   })
 
   const [updateOrder] = useMutation(UPDATE_ORDER)
   const updateOrderStatus = async ({ orderId }, status) => {// 修改状态  只可以操作一次
-    const res = await updateOrder({ variables: { orderId, status } })
-    const { updateOrder: result } = res.data
+    const [err, res] = await To(updateOrder({ variables: { orderId, status } }))
+    console.log(err)
+    if (err) return openNotificationWithIcon({ type: 'error', content: err.message || 'server error' })
+    const { updateOrder: result, errors } = res.data
+    if (!result?.success) return openNotificationWithIcon({ type: 'error', content: result?.msg || 'server error' })
+
     refetch()
-    if (!result ?.success) return openNotificationWithIcon({ type: 'error', content: result ?.msg || 'server error' })
     openNotificationWithIcon({ content: 'successful' })
   }
   const openConfrimUpdate = (item, status) => {// 打开确认弹窗
@@ -86,24 +90,9 @@ export default props => {
 
   // 更改某一个值触发重新请求
   const refresh = (key, val) => {
-    setParams({ ...params, [key]: val })
+    setParams({ ...params, [key]: val !== '' ? val : undefined })
     refetch()
   }
-
-  const dynamicColumns = [// field of bank
-    {
-      title: 'payBank',
-      dataIndex: 'payBank'
-    },
-    {
-      title: 'payAmount',
-      dataIndex: 'payAmount'
-    },
-    {
-      title: 'payRealName',
-      dataIndex: 'payRealName'
-    },
-  ]
 
   const columns = [
     {
@@ -120,7 +109,18 @@ export default props => {
       dataIndex: 'payFor',
       render: val => payObj[val]
     },
-    ...params.payFor == 0 ? dynamicColumns : [],
+    {
+      title: 'payBank',
+      dataIndex: 'payBank'
+    },
+    {
+      title: 'payAmount',
+      dataIndex: 'payAmount'
+    },
+    {
+      title: 'payRealName',
+      dataIndex: 'payRealName'
+    },
     {
       title: 'status',
       dataIndex: 'status',
@@ -136,7 +136,8 @@ export default props => {
     },
     {
       title: 'money',
-      dataIndex: 'money'
+      dataIndex: 'money',
+      render: val => `￥${val}`
     },
     {
       title: 'remark',
@@ -154,6 +155,7 @@ export default props => {
         const RejectBtn = () => <Button type="danger" size='small' onClick={() => openConfrimUpdate(records, -1)}>reject</Button>
         let res = '--'
         if (records.status === 0) res = <><PassBtn /><RejectBtn /></>
+        if (records.status === -1) res = <PassBtn />
         return res
       }
     }
@@ -163,13 +165,15 @@ export default props => {
   return (
     <>
       <div styleName="filter">
-        <Select defaultValue={0} style={{ width: 120, marginRight: 15 }} onChange={val => refresh('status', val)}>
+        <Select defaultValue={''} style={{ width: 150, marginRight: 15 }} onChange={val => refresh('status', val)}>
+          <Option value={''}>select order status</Option>
           <Option value={0}>Pedding</Option>
           <Option value={1}>Pass</Option>
           <Option value={-1}>Fail</Option>
         </Select>
-        <Select defaultValue={0} style={{ width: 120, marginRight: 15 }} onChange={val => refresh('payFor', val)}>
+        <Select defaultValue={''} style={{ width: 150, marginRight: 15 }} onChange={val => refresh('payFor', val)}>
           {/* 0 银行转账  1 支付宝  2 微信 */}
+          <Option value={''}>select payType</Option>
           <Option value={0}>bank</Option>
           <Option value={1}>alipay</Option>
           <Option value={2}>wepay</Option>
@@ -181,7 +185,7 @@ export default props => {
         columns={columns}
         rowKey={record => record._id}
         loading={loading}
-        dataSource={data ?.orders ?? []}
+        dataSource={data?.orders ?? []}
         onChange={handleTableChange}
       />
     </>
