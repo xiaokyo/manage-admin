@@ -40,7 +40,7 @@ export default [
 
 const writeRoutersIndex = () => {// 根据工作目录下的 ./src/apis/中的文件生成index.js
   fs.writeFileSync(`${CACHE_PATH}/routers/index.js`, createRouterIndex(getRouters()))
-  log(`[路由]：更新 ${CACHE_PATH}/routers/index.js 成功`)
+  // log(`[路由]：更新 ${CACHE_PATH}/routers/index.js 成功`)
 }
 
 // 过滤的文件列表

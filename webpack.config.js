@@ -20,13 +20,13 @@ const BASE_PATH = ''
 
 const devServer = {
   contentBase: path.join(__dirname, 'build'),// 根目录
-  compress: true,// 是否压缩
+  // compress: true,// 是否压缩
   port: PORT,// 启动端口
-  open: true,// 打包好自动启动网页
+  // open: true,// 打包好自动启动网页
   openPage: BASE_PATH,
   publicPath: PUBLIC_PATH, // 静态目录
   allowedHosts: ['*'], // 允许的域名
-  writeToDisk: true, // 开发环境是否写入文件 output 配置的目录
+  // writeToDisk: true, // 开发环境是否写入文件 output 配置的目录
   historyApiFallback: {
     rewrites: [
       { from: /^\//, to: '/index.html' },// 开发环境下防止404

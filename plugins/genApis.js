@@ -38,7 +38,7 @@ export default { ...ApiFn(APIS) }
 
 const writeApisIndex = () => {// 根据工作目录下的 ./src/apis/中的文件生成index.js
   fs.writeFileSync(`${CACHE_PATH}/apis/index.js`, readApisFiles())
-  log(`[接口]：更新 ${CACHE_PATH}/apis/index.js 成功`)
+  // log(`[接口]：更新 ${CACHE_PATH}/apis/index.js 成功`)
 }
 
 module.exports = { writeApisIndex }
